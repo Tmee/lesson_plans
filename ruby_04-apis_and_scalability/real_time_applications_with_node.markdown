@@ -63,14 +63,14 @@ Last week we learned about pub/sub on the server. Reflect on the following quest
 
 ### Getting Started
 
-Fist, clone [this repository][rn] if you have not already.  It contains a simple little Express app that servers a static `index.html` page. It also has [Socket.io][] hooked up by default—despite the fact that we're not using it at this moment.
+Fist, clone [this repository][rn] if you have not already.  It contains a simple little Express app that server a static `index.html` page. It also has [Socket.io][] hooked up by default—despite the fact that we're not using it at this moment.
 
 Once you have cloned the repo, you will probably need to `sudo npm install`.  Let npm install all the dependencies that are needed for the app.  If you want to see what those are, check out the `package.json`.  Once the dependencies are loaded, you can fire up the server with `npm start`.
 
 ```shell
 $npm start
 
-> right-now@1.0.0 start /Users/Tim_Mee/Turing/TA/right-now
+> right-now@1.0.0 start /Users/YourName/right-now
 > ./node_modules/nodemon/bin/nodemon.js index.js
 
 15 Jul 13:16:08 - [nodemon] v1.3.7
@@ -237,7 +237,7 @@ There are also some helpful methods for seeing how many clients are currently co
 
 ## Hooking Things Up with Redis
 
-Open up a new terminal window and navigate to the root directory of the Right-Now app.
+Open up a new terminal window and navigate to the root directory of the Right-Now app we've been working on.
 
 Let's install the `redis` library in Node.
 
@@ -279,7 +279,7 @@ $redis-server
 * The server is now ready to accept connections on port 6379
 ```
 
-Move back to `index.js` so we can set up Redis. Require Redis like so:
+Head back to `index.js` so we can set up Redis. Require Redis like so:
 
 ```js
 const redis = require('redis');
@@ -291,7 +291,7 @@ Next, we can create a client that connects:
 const client = redis.createClient();
 ```
 
-Now, we'll connect to the channel `community`.  The app we will use to talk to our npm app will try to publish to a community channel by default. Remember you'll need to be inside the function that has access to the socket:
+Now, we'll connect to the channel `community`.  The app we will use to talk to our Express app will publish to a community channel by default. Remember the following code needs to be inside the function that has access to the socket:
 
 ```js
 client.subscribe("community");
@@ -305,11 +305,11 @@ client.on("message", function (channel, message) {
 });
 ```
 
-The next step is for us to fire up one of the [Slacker][] publishers (preferably `talker.rb`) and publish some messages.  Open up a new terminal window and clone that repo then `bundle install`.  Slacker is a Sinatra app so to start up the publisher enter: `ruby publishers/talker.rb`.  To send a messege to the community channel, simply type a message at the prompt and press enter.  If your Express app was still running check the console, otherwise `npm start` that server and send another message.  Look! Ruby is talking to Node. This is so amazing. Barriers: broken.
+The next step is for us to fire up one of the [Slacker][] publishers (preferably `talker.rb`) and publish some messages.  Open up a new terminal window and clone that repo then `bundle install`.  Slacker is a Sinatra app so, to start up the publisher enter: `ruby publishers/talker.rb`.  To send a messege to the community channel, simply type a message at the prompt and press enter.  If your Express app was still running check the browser's console, otherwise `npm start` that server and send another message.  Look! Ruby is talking to Node. This is so amazing. Barriers: broken.
 
 ### Your Turn
 
-Can you take a message from Slacker (via Redis) and push it over a socket to the client.
+Can you take a message from Slacker (via Redis) and push it over a socket to the client? Try adding the message onto the DOM.
 
 [Slacker]: http://github.com/turingschool-examples/slacker
 
