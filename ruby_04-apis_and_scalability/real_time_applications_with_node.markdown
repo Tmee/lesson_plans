@@ -305,7 +305,7 @@ client.on("message", function (channel, message) {
 });
 ```
 
-The next step is for us to fire up one of the [Slacker][] publishers (preferably `talker.rb`) and publish some messages.  Open up a new terminal window and clone that repo then `bundle install`.  Slacker is a Sinatra app so, to start up the publisher enter: `ruby publishers/talker.rb`.  To send a messege to the community channel, simply type a message at the prompt and press enter.  If your Express app was still running check the browser's console, otherwise `npm start` that server and send another message.  Look! Ruby is talking to Node. This is so amazing. Barriers: broken.
+The next step is for us to fire up one of the [Slacker][] publishers (preferably `talker.rb`) and publish some messages.  Open up a new terminal window and clone that repo then `bundle install`.  Slacker is a Sinatra app so, to start up the publisher enter: `ruby publishers/talker.rb`.  To send a message to the community channel, simply type a message at the prompt and press enter.  If your Express app was still running check the browser's console, otherwise `npm start` that server and send another message.  Look! Ruby is talking to Node. This is so amazing. Barriers: broken.
 
 ### Your Turn
 
