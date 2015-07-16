@@ -63,9 +63,22 @@ Last week we learned about pub/sub on the server. Reflect on the following quest
 
 ### Getting Started
 
-[This repository][rn] contains a simple little Express app that servers a static `index.html` page. It also has [Socket.io][] hooked up by default—despite the fact that we're not using it at this moment.
+Fist, clone [this repository][rn] if you have not already.  It contains a simple little Express app that servers a static `index.html` page. It also has [Socket.io][] hooked up by default—despite the fact that we're not using it at this moment.
 
-You can fire up the server with `npm start`.
+Once you have cloned the repo, you will probably need to `sudo npm install`.  Let npm install all the dependencies that are needed for the app.  If you want to see what those are, check out the `package.json`.  Once the dependencies are loaded, you can fire up the server with `npm start`.
+
+```shell
+$npm start
+
+> right-now@1.0.0 start /Users/Tim_Mee/Turing/TA/right-now
+> ./node_modules/nodemon/bin/nodemon.js index.js
+
+15 Jul 13:16:08 - [nodemon] v1.3.7
+15 Jul 13:16:08 - [nodemon] to restart at any time, enter `rs`
+15 Jul 13:16:08 - [nodemon] watching: *.*
+15 Jul 13:16:08 - [nodemon] starting `node index.js`
+Your server is up and running on Port 3000. Good job!
+```
 
 Let's start with a simple "hello world" implementation.
 
@@ -224,25 +237,61 @@ There are also some helpful methods for seeing how many clients are currently co
 
 ## Hooking Things Up with Redis
 
+Open up a new terminal window and navigate to the root directory of the Right-Now app.
+
 Let's install the `redis` library in Node.
 
 ```
 npm install redis --save
 ```
 
-We can require it in our file, like so:
+Then start the Redis server in that same window
+
+```
+redis-server
+```
+
+If that worked you should see something like this:
+
+```shell
+$redis-server
+# Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+* Increased maximum number of open files to 10032 (it was originally set to 2560).
+                _._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 2.8.17 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in stand alone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 52027
+  `-._    `-._  `-./  _.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |           http://redis.io
+  `-._    `-._`-.__.-'_.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |
+  `-._    `-._`-.__.-'_.-'    _.-'
+      `-._    `-.__.-'    _.-'
+          `-._        _.-'
+              `-.__.-'
+
+# Server started, Redis version 2.8.17
+* The server is now ready to accept connections on port 6379
+```
+
+Move back to `index.js` so we can set up Redis. Require Redis like so:
 
 ```js
 const redis = require('redis');
 ```
 
-Next, we can create client that connects:
+Next, we can create a client that connects:
 
 ```js
 const client = redis.createClient();
 ```
 
-Now, we'll connect to the `community`:
+Now, we'll connect to the channel `community`.  The app we will use to talk to our npm app will try to publish to a community channel by default. Remember you'll need to be inside the function that has access to the socket:
 
 ```js
 client.subscribe("community");
@@ -256,7 +305,7 @@ client.on("message", function (channel, message) {
 });
 ```
 
-The next step is for us to fire up one of the [Slacker][] publishers (preferably `talker.rb`) and publish some messages. Look! Ruby is talking to Node. This is so amazing. Barriers: broken.
+The next step is for us to fire up one of the [Slacker][] publishers (preferably `talker.rb`) and publish some messages.  Open up a new terminal window and clone that repo then `bundle install`.  Slacker is a Sinatra app so to start up the publisher enter: `ruby publishers/talker.rb`.  To send a messege to the community channel, simply type a message at the prompt and press enter.  If your Express app was still running check the console, otherwise `npm start` that server and send another message.  Look! Ruby is talking to Node. This is so amazing. Barriers: broken.
 
 ### Your Turn
 
